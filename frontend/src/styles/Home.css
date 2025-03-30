@@ -1,0 +1,163 @@
+body{
+    margin-bottom: 70px;
+    overflow-x: hidden;
+}
+
+.background{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("https://static-x.jamesedition.com/assets/category_banner/cars_desktop-af2ea25aa8e069da3d3411834fa7b06a679a566f81461a9baf7a6e2b40739024.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+}
+
+.background::before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4) linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 70%, #1a1a1a);
+    z-index: 0;
+}
+
+.background > * {
+    position: relative;
+    z-index: 1;
+}
+
+.car-brands{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    width: 120px;
+    border: solid 1px white;
+    margin: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.car-brands:hover{
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.car-brands img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.carButtons{
+    margin-top: 10%;
+    gap: 10px;
+    
+}
+
+.carousel-container{
+    width: 80%;
+    max-width: 1200px;
+    margin: 50px auto;
+    position: relative;
+    padding-top: 35vh;
+    padding-bottom: 60px;
+    
+}
+
+.carousel-image{
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    margin-bottom: 40px;
+    border-radius: 10px;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 10%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+    .carButtons {
+        gap: 10px;
+        padding: 15px;
+    }
+    .car-brands {
+        width: 90px;
+        height: 90px;
+    }
+    .car-brands img {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+.reviews {
+    background-color: #212121;
+    padding: 50px 0;
+    border-radius: 15px;
+    width: 100%;
+    position: relative;
+}
+  
+.reviews h2 {
+    font-size: 2rem;
+    color: #f8f9fa;
+    font-weight: bold;
+}
+  
+.reviews .card {
+    background-color: #333;
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+  
+.reviews .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+  
+.reviews .card-body {
+    padding: 20px;
+}
+  
+.reviews .card-title {
+    font-size: 1.5rem;
+    color: #f8f9fa;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+  
+.reviews .card-subtitle {
+    font-size: 1rem;
+    color: #dcdcdc;
+    margin-bottom: 10px;
+}
+  
+.reviews .card-text {
+    font-size: 1rem;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+.reviews .rating{
+    color: rgb(141, 98, 17);
+}
