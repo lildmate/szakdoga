@@ -43,12 +43,13 @@ function NavbarComp({ user, onLogout, favoritesUpdated }) {
           'Content-Type': 'application/json'
         },
       });
-
+      const data = await response.json();
       if (!response.ok) {
+        console.log(data.message);
         throw new Error("Nem sikerült lekérni a rendeléseket.");
       }
 
-      const data = await response.json();
+      
       setOrders(data);
     } catch (error) {
       console.error("Hiba a rendelés lekérésekor:", error);
@@ -65,7 +66,7 @@ function NavbarComp({ user, onLogout, favoritesUpdated }) {
             return;
         }
 
-        const response = await fetch(`http://localhost:3000/deleteOrder/${orderId}`, {
+        const response = await fetch(`http://localhost:3000/admin/deleteOrder/${orderId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -103,7 +104,7 @@ function NavbarComp({ user, onLogout, favoritesUpdated }) {
             <Nav.Link as={Link} to="/Contact">Kapcsolat</Nav.Link>
             <Nav.Link as={Link} to="/About">Rólunk</Nav.Link>
             {user?.isAdmin && (
-              <Nav.Link as={Link} to="/admin">Admin Panel</Nav.Link>
+              <Nav.Link as={Link} to="/admin">Admin Felület</Nav.Link>
             )}
           </Nav>
 

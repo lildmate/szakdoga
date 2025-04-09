@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Alert, Table, Button, Modal, Form } from 'react-bootstrap';
+import '../styles/AdminPanel.css';
 
 const AdminPanel = () => {
     const [user, setUser] = useState(null);
@@ -33,7 +34,10 @@ const AdminPanel = () => {
         }
 
         fetch("http://localhost:3000/user", {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { 
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
         })
             .then((response) => response.json())
             .then((data) => {
@@ -56,7 +60,7 @@ const AdminPanel = () => {
     }, [navigate]);
 
     const fetchUsers = () => {
-        fetch("http://localhost:3000/allUsers", {
+        fetch("http://localhost:3000/admin/allUsers", {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         })
             .then(response => response.json())
@@ -92,7 +96,7 @@ const AdminPanel = () => {
     };
 
     const fetchOrders = () => {
-        fetch("http://localhost:3000/allOrders", {
+        fetch("http://localhost:3000/admin/allOrders", {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         })
             .then(response => response.json())
@@ -142,25 +146,17 @@ const AdminPanel = () => {
         setShowAddCarModal(true);
     };
 
-    const handleCarInputChange = (e) => {
-        const { name, value } = e.target;
-        setCurrentCar(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
     const handleToggleAdmin = async (userId, currentAdminStatus) => {
         try {
-            const response = await fetch(`http://localhost:3000/updateAdminStatus/${userId}`, {
+            const response = await fetch(`http://localhost:3000/admin/updateAdminStatus/${userId}`, {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ isAdmin: !currentAdminStatus })
             });
-    
+
             if (response.ok) {
                 fetchUsers();
                 if (user.id === userId) {
@@ -184,7 +180,7 @@ const AdminPanel = () => {
     };
 
     const confirmDeleteUser = () => {
-        fetch(`http://localhost:3000/deleteUser/${selectedItem}`, {
+        fetch(`http://localhost:3000/admin/deleteUser/${selectedItem}`, {
             method: 'DELETE',
             headers: { 
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -206,7 +202,7 @@ const AdminPanel = () => {
     };
 
     const confirmDeleteCar = () => {
-        fetch(`http://localhost:3000/deleteCar/${selectedItem}`, {
+        fetch(`http://localhost:3000/admin/deleteCar/${selectedItem}`, {
             method: 'DELETE',
             headers: { 
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -228,7 +224,7 @@ const AdminPanel = () => {
     };
 
     const confirmDeleteOrder = () => {
-        fetch(`http://localhost:3000/deleteOrder/${selectedItem}`, {
+        fetch(`http://localhost:3000/admin/deleteOrder/${selectedItem}`, {
             method: 'DELETE',
             headers: { 
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -250,7 +246,7 @@ const AdminPanel = () => {
     };
 
     const confirmEditCar = () => {
-        fetch(`http://localhost:3000/updateCar/${currentCar.id}`, {
+        fetch(`http://localhost:3000/admin/updateCar/${currentCar.id}`, {
             method: 'PUT',
             headers: { 
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -273,7 +269,7 @@ const AdminPanel = () => {
     };
 
     const confirmAddCar = () => {
-        fetch(`http://localhost:3000/addCar`, {
+        fetch(`http://localhost:3000/admin/addCar`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -301,13 +297,13 @@ const AdminPanel = () => {
 
     return (
         <Container className="mt-3">
-            <h1>Admin Panel</h1>
-            <p>Üdvözöljük, {user.username}!</p>
+            <h1 className="text-center">Admin Felület</h1>
             
             {error && <Alert variant="danger">{error}</Alert>}
 
-            <h2 className="mt-4">Felhasználók kezelése</h2>
-            <Table striped bordered hover>
+            <div className='row'><div className='col p-4'>
+            <h2 className="mt-4">Felhasználók</h2>
+            <Table striped bordered hover rounded>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -334,7 +330,7 @@ const AdminPanel = () => {
                                 />
                             </td>
                             <td>
-                                <Button variant="danger" size="sm" onClick={() => handleDeleteUser(user.id)}>
+                                <Button variant="dark" size="sm" onClick={() => handleDeleteUser(user.id)}>
                                     Törlés
                                 </Button>
                             </td>
@@ -342,12 +338,42 @@ const AdminPanel = () => {
                     ))}
                 </tbody>
             </Table>
-
-            <h2 className="mt-4">Autók kezelése</h2>
-            <Button variant="success" className="mb-3" onClick={handleAddCar}>
-                Új autó hozzáadása
-            </Button>
+            </div>
+            <div className='col p-4'>
+            <h2 className="mt-4">Rendelések</h2>
             <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Név</th>
+                        <th>Email</th>
+                        <th>Autó ID</th>
+                        <th>Műveletek</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orders.map(order => (
+                        <tr key={order.id}>
+                            <td>{order.id}</td>
+                            <td>{order.fullname}</td>
+                            <td>{order.email}</td>
+                            <td>{order.carId}</td>
+                            <td>
+                                <Button variant="dark" size="sm" onClick={() => handleDeleteOrder(order.id)}>
+                                    Törlés
+                                </Button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+            </div></div>
+
+            <h2 className="mt-4">Autók</h2>
+            <div className='d-flex justify-content-center'><Button variant="outline-dark" className="mb-3" onClick={handleAddCar}>
+                Új autó hozzáadása
+            </Button></div>
+            <Table id='adminCarsTable' striped bordered hover>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -369,10 +395,10 @@ const AdminPanel = () => {
                             <td>{car.engine}</td>
                             <td>{car.price}</td>
                             <td>
-                                <Button variant="primary" size="sm" className="me-2" onClick={() => handleEditCar(car)}>
+                                <Button variant="outline-dark" size="sm" className="me-2" onClick={() => handleEditCar(car)}>
                                     Szerkesztés
                                 </Button>
-                                <Button variant="danger" size="sm" onClick={() => handleDeleteCar(car.id)}>
+                                <Button variant="dark" size="sm" onClick={() => handleDeleteCar(car.id)}>
                                     Törlés
                                 </Button>
                             </td>
@@ -381,33 +407,7 @@ const AdminPanel = () => {
                 </tbody>
             </Table>
 
-            <h2 className="mt-4">Rendelések kezelése</h2>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Név</th>
-                        <th>Email</th>
-                        <th>Autó ID</th>
-                        <th>Műveletek</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {orders.map(order => (
-                        <tr key={order.id}>
-                            <td>{order.id}</td>
-                            <td>{order.fullname}</td>
-                            <td>{order.email}</td>
-                            <td>{order.carId}</td>
-                            <td>
-                                <Button variant="danger" size="sm" onClick={() => handleDeleteOrder(order.id)}>
-                                    Törlés
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            
 
             {/* Felhasználó törlés megerősítő modal */}
             <Modal show={showDeleteUserModal} onHide={() => setShowDeleteUserModal(false)}>
@@ -416,10 +416,10 @@ const AdminPanel = () => {
                 </Modal.Header>
                 <Modal.Body>Biztosan törölni szeretnéd ezt a felhasználót?</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowDeleteUserModal(false)}>
+                    <Button variant="outline-dark" onClick={() => setShowDeleteUserModal(false)}>
                         Mégse
                     </Button>
-                    <Button variant="danger" onClick={confirmDeleteUser}>
+                    <Button variant="dark" onClick={confirmDeleteUser}>
                         Törlés
                     </Button>
                 </Modal.Footer>
@@ -432,10 +432,10 @@ const AdminPanel = () => {
                 </Modal.Header>
                 <Modal.Body>Biztosan törölni szeretnéd ezt az autót?</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowDeleteCarModal(false)}>
+                    <Button variant="outline-dark" onClick={() => setShowDeleteCarModal(false)}>
                         Mégse
                     </Button>
-                    <Button variant="danger" onClick={confirmDeleteCar}>
+                    <Button variant="dark" onClick={confirmDeleteCar}>
                         Törlés
                     </Button>
                 </Modal.Footer>
@@ -448,10 +448,10 @@ const AdminPanel = () => {
                 </Modal.Header>
                 <Modal.Body>Biztosan törölni szeretnéd ezt a rendelést?</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowDeleteOrderModal(false)}>
+                    <Button variant="outline-dark" onClick={() => setShowDeleteOrderModal(false)}>
                         Mégse
                     </Button>
-                    <Button variant="danger" onClick={confirmDeleteOrder}>
+                    <Button variant="dark" onClick={confirmDeleteOrder}>
                         Törlés
                     </Button>
                 </Modal.Footer>
@@ -470,7 +470,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="brand"
                                 value={currentCar.brand}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, brand: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -479,7 +479,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="name"
                                 value={currentCar.name}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, name: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -488,7 +488,7 @@ const AdminPanel = () => {
                                 type="number" 
                                 name="year"
                                 value={currentCar.year}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, year: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -497,7 +497,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="engine"
                                 value={currentCar.engine}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, engine: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -506,7 +506,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="price"
                                 value={currentCar.price}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, price: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -515,16 +515,16 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="image_url"
                                 value={currentCar.image_url}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, image_url: e.target.value })}
                             />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowEditCarModal(false)}>
+                    <Button variant="outline-dark" onClick={() => setShowEditCarModal(false)}>
                         Mégse
                     </Button>
-                    <Button variant="primary" onClick={confirmEditCar}>
+                    <Button variant="dark" onClick={confirmEditCar}>
                         Mentés
                     </Button>
                 </Modal.Footer>
@@ -543,7 +543,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="brand"
                                 value={currentCar.brand}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, brand: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -552,7 +552,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="name"
                                 value={currentCar.name}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, name: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -561,7 +561,7 @@ const AdminPanel = () => {
                                 type="number" 
                                 name="year"
                                 value={currentCar.year}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, year: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -570,7 +570,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="engine"
                                 value={currentCar.engine}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, engine: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -579,7 +579,7 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="price"
                                 value={currentCar.price}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, price: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -588,16 +588,16 @@ const AdminPanel = () => {
                                 type="text" 
                                 name="image_url"
                                 value={currentCar.image_url}
-                                onChange={handleCarInputChange}
+                                onChange={(e) => setCurrentCar({ ...currentCar, image_url: e.target.value })}
                             />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowAddCarModal(false)}>
+                    <Button variant="outline-dark" onClick={() => setShowAddCarModal(false)}>
                         Mégse
                     </Button>
-                    <Button variant="success" onClick={confirmAddCar}>
+                    <Button variant="dark" onClick={confirmAddCar}>
                         Hozzáadás
                     </Button>
                 </Modal.Footer>

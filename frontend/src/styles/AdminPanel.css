@@ -1,0 +1,10 @@
+input[type="checkbox"]:checked {
+    background-color: black;
+}
+#adminCarsTable {
+    width: 75%;
+    margin: 0 auto;
+}
+h2 {
+    text-align: center;
+}
