@@ -69,7 +69,7 @@ function RollsRoyce() {
                             <Card className="shadow mb-3 cards">
                                 <Card.Body>
                                     {car.image_url && (
-                                        <Card.Img variant="top" src={car.image_url} alt={car.name} />
+                                        <Card.Img variant="top" src={require(`../../img/cars/${car.image_url}`)} alt={car.name} />
                                     )}
                                     <Card.Title className='mt-2'>{car.brand}</Card.Title>
                                     <Card.Text className='mt-3'>
