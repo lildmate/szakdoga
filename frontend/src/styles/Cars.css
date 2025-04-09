@@ -13,3 +13,6 @@
 .masonry-grid_column > div {
     margin-bottom: 30px; /* Adjust this value to control the space between items */
 }
+button {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

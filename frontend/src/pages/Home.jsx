@@ -5,7 +5,7 @@ import Slide1 from '../img/carousel-images/FlyingSpur.jpg';
 import Slide2 from '../img/carousel-images/continentalgtspeed.png';
 import Slide3 from '../img/carousel-images/maybachs680.jpg';
 import Slide4 from '../img/carousel-images/Jesko.jpg';
-import Slide5 from '../img/carousel-images/porschecarrera.jpg'
+import Slide5 from '../img/carousel-images/porschecarrera.jpg';
 import '../styles/Home.css';
 
 const Home = () => {

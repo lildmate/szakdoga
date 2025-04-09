@@ -94,7 +94,7 @@ function Cars({ onFavoriteChange }) {
                             <Card className="shadow">
                                 <Card.Body style={{ backgroundColor: '#EDEDED' }}>
                                     {car.image_url && (
-                                        <Card.Img variant="top" src={car.image_url} alt={car.name} />
+                                        <Card.Img variant="top" src={require(`../img/cars/${car.image_url}`)} alt={car.name} />
                                     )}
                                     <Card.Title className='mt-2'>{car.brand}</Card.Title><hr />
                                     <div className='mt-3 card-text'>
